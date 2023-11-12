@@ -1,0 +1,111 @@
+{% extends "layouts/base.html" %}
+
+<!-- block for unauthorized user -->
+{% block user_status %}
+<a class="btn btn-outline-primary fs-5" href="#">sign in</a>
+<a class="btn btn-primary fs-5 mx-3" href="#">sign up</a>
+{% endblock user_status %}
+
+{% block content %}
+<div class="col-9">
+    <!-- Full question template -->
+    <div class="container p-3 border-bottom border-2">
+        <div class="row align-items-start">
+            <!-- Column for avatar -->
+            <div class="col-2 my-3">
+                <img src="https://avatars.mds.yandex.net/i?id=fd573ab1672578a0f8d75ad3506626bc18e1a953-10768430-images-thumbs&n=13" class="rounded-3" style="width: 100px;" alt="Avatar" />
+            </div>
+            <!-- Column for question and text -->
+            <div class="col-10">
+                <div class="d-flex flex-column justify-content-start align-items-start my-1">
+                    <p class="text-secondary fs-3" href="#">How to build a moon park?</p>
+                    <p class="fs-5 text-secondary">
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.<br>
+                        Neque quo omnis modi consequuntur numquam, magnam dolore non<br>
+                        explicabo, doloremque, esse suscipit! Eum quisquam dicta aut,<br>
+                        deserunt saepe molestias facilis nulla?<br>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- New line -->
+        <div class="row align-items-center">
+            <!-- Column for likes -->
+            <div class="col-2">
+                <input value="0" min="0" type="number" id="typeNumber" class="form-control counter"/>
+            </div>
+            <!-- Column for tags -->
+            <div class="col-10">
+                <div class="d-flex justify-content-start align-items-center">
+                    <span class="fs-5 text-secondary">Tags: </span>
+                    <a class="link-offset-2 fs-5" href="#">black-jack</a>
+                    <a class="link-offset-2 fs-5 mx-3" href="#">bender</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of question template -->
+    <!-- Answer template -->
+    <div class="container border border-2 rounded-3 p-3 my-3">
+        <div class="row align-items-center my-2">
+            <!-- Column for avatar -->
+            <div class="col-2">
+                <img src="https://avatars.mds.yandex.net/i?id=fd573ab1672578a0f8d75ad3506626bc18e1a953-10768430-images-thumbs&n=13" class="rounded-3" style="width: 100px;" alt="Avatar" />
+            </div>
+            <!-- Column for answer -->
+            <div class="col-10">
+                <div class="d-flex flex-column justify-content-start align-items-start">
+                    <p class="text-secondary fs-5 text-break">
+                        First of all i would like to thank you for the invitation to participate in such a Russia is the huge territory which in many respects needs to be render habilable.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- New line -->
+        <div class="row align-items-center">
+            <!-- Column for likes -->
+            <div class="col-2">
+                <input value="0" min="0" type="number" id="typeNumber" class="form-control counter"/>
+            </div>
+            <!-- Column for check if the answer correct or not -->
+            <div class="col-10">
+                <div class="d-flex justify-content-start align-items-center">
+                      <div class="form-check mx-1">
+                        <input class="form-check-input fs-5 text-secondary" type="checkbox" value="" id="flexCheckChecked">
+                        <label class="form-check-label fs-5 text-secondary" for="flexCheckChecked">
+                            Correct!
+                        </label>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of answer template -->
+    <div class="row align-items-center">
+        <!-- Pagination for iterating all answers -->
+        <nav>
+            <ul class="pagination justify-content-start my-4">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+        <!-- End of pagination -->
+    </div>
+    <!-- Answer input -->
+    <div class="container border-top border-2 p-3 px-0">
+        <textarea class="form-control text-secondary border-2" rows="4" placeholder="Enter your answer here."></textarea>
+    </div>
+    <!-- End of answer input -->
+    <!-- Input for answer button -->
+    <div class="container px-0">
+        <button type="button" class="btn btn-success px-5">Answer</button>
+    </div>
+</div>
+{% endblock content %}

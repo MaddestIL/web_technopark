@@ -1,0 +1,67 @@
+{% extends "layouts/base.html" %}
+
+<!-- block for unauthorized user -->
+{% block user_status %}
+<a class="btn btn-outline-primary fs-5" href="#">sign in</a>
+<a class="btn btn-primary fs-5 mx-3" href="#">sign up</a>
+{% endblock user_status %}
+
+{% block content %}
+<div class="col-9 my-4">
+    <!-- Title of the page -->
+    <div class="d-flex justify-content-start align-items-center">
+        <h2 class="text-secondary">Log In</h2>
+    </div>
+    <!-- Login form -->
+    <div class="container p-3 my-3">
+        <div class="row align-items-center">
+            <!-- Column for label login-->
+            <div class="col-1 px-0">
+                <p class="text-secondary fs-5 my-0">Login</p>
+            </div>
+            <!-- Column for forms (input login) -->
+            <div class="col-7">
+                <form class="form-horizontal" action="" method="POST" role="form" name="" id="">
+                    <div class="form-group">
+                        <input type="email" id="loginName" class="form-control" placeholder="Input your login..." />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- New line -->
+        <div class="row my-4">
+            <!-- Column for label password -->
+            <div class="col-1 px-0">
+                <p class="text-secondary fs-5">Password</p>
+            </div>
+            <!-- Column for forms (input password) -->
+            <div class="col-7">
+                <input type="password" class="form-control" placeholder="Input your password..."/>
+            </div>
+        </div>
+        <!-- New line -->
+        <div class="row align-items-center">
+            <!-- Empty column -->
+            <div class="col-1 px-0">
+                <p></p>
+            </div>
+            <!-- Column for login button -->
+            <div class="col-11">
+                <button type="button" class="btn btn-success px-5">Log in</button>
+            </div>
+        </div>
+        <!-- New line -->
+        <div class="row align-items-center">
+            <!-- Empty column -->
+            <div class="col-1 px-0">
+                <p></p>
+            </div>
+            <!-- Column for link for creating a new account -->
+            <div class="col-11 my-4">
+                <a class="link-offset-2 fs-5" href="#">create new account</a>
+            </div>
+        </div>
+    </div>
+    <!-- End of login form -->
+</div>
+{% endblock content %}

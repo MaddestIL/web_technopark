@@ -1,0 +1,75 @@
+{% extends "layouts/base.html" %}
+
+{% block user_status %}
+<img src="https://avatars.mds.yandex.net/i?id=fd573ab1672578a0f8d75ad3506626bc18e1a953-10768430-images-thumbs&n=13" class="rounded-3" style="width: 80px;" alt="Avatar" />
+<div class="d-flex flex-column mx-4">
+    <p class="fs-3 my-1 text-secondary">Dr. Pepper</p>
+    <div class="mt-1">
+        <a class="link-offset-2 fs-5" href="#">settings</a>
+        <a class="link-offset-2 fs-5 mx-3" href="#">log out</a>
+    </div>
+</div>
+{% endblock user_status %}
+
+{% block content %}
+<div class="col-9 my-4">
+    <!-- Title of the page and link to the hot questions-->
+    <div class="d-flex justify-content-start align-items-center">
+        <h2 class="text-secondary">New Questions</h2>
+        <a class="link-offset-2 fs-5 mx-3" href="">Hot Questions</a>
+    </div>
+    <!-- Question template -->
+    <div class="container border border-2 rounded-3 p-3 my-3">
+        <div class="row align-items-center">
+            <!-- Column for avatar -->
+            <div class="col-2">
+                <img src="https://avatars.mds.yandex.net/i?id=fd573ab1672578a0f8d75ad3506626bc18e1a953-10768430-images-thumbs&n=13" class="rounded-3" style="width: 100px;" alt="Avatar" />
+            </div>
+            <!-- Column for question -->
+            <div class="col-10">
+                <div class="d-flex flex-column justify-content-start align-items-start">
+                    <a class="link-offset-2 fs-3" href="#">How to build a moon park?</a>
+                    <p class="fs-5 text-secondary">
+                        Guys, i have trouble with a moon park.<br>
+                        Can't find th black-jack...
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- New line -->
+        <div class="row align-items-center">
+            <!-- Column for likes -->
+            <div class="col-2">
+                <input value="0" min="0" type="number" id="typeNumber" class="form-control counter"/>
+            </div>
+            <!-- Column for tags and answers -->
+            <div class="col-10">
+               <div class="d-flex justify-content-start align-items-center">
+                    <a class="link-offset-2 fs-5" href="#">answer(3)</a>
+                    <div class="mx-5">
+                        <span class="fs-5 text-secondary">Tags: </span>
+                        <a class="link-offset-2 fs-5" href="#">black-jack</a>
+                        <a class="link-offset-2 fs-5 mx-3" href="#">bender</a>
+                    </div>
+               </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of question template -->
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-start my-4">
+          <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+          </li>
+        </ul>
+    </nav>
+    <!-- End of pagination -->
+</div>
+{% endblock content %}
