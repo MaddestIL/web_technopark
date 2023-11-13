@@ -2,8 +2,8 @@
 
 <!-- block for unauthorized user -->
 {% block user_status %}
-<a class="btn btn-primary fs-6" href="#">settings</a>
-<a class="btn btn-outline-danger fs-6 mx-3" href="#">log out</a>
+<a class="btn btn-primary fs-6" href="{%url 'settings' %}">Settings</a>
+<button class="btn btn-outline-danger fs-6 mx-3">Sign out</button>
 {% endblock user_status %}
 
 {% block content %}
@@ -23,7 +23,7 @@
             <!-- Column for question and text -->
             <div class="col-9">
                 <div class="d-flex flex-column justify-content-start align-items-start my-1">
-                    <p class="text-secondary fs-3" href="#">How to build a moon park?</p>
+                    <p class="text-secondary fs-3" href="#">Lorem</p>
                     <p class="fs-5 text-secondary">
                         Lorem ipsum dolor sit, amet consectetur adipisicing elit.<br>
                         Neque quo omnis modi consequuntur numquam, magnam dolore non<br>
@@ -35,11 +35,11 @@
             <!-- Column for tags -->
             <div class="col-10">
                 <div class="d-flex justify-content-start align-items-center">
-                     <div class="flex mt-3">
+                     <div class="flex mt-5">
                             <span>Tags:</span>
-                            <span class="badge bg-primary rounded-pill">tag1</span >
-                            <span class="badge bg-primary rounded-pill">tag2</span>
-                            <span class="badge bg-primary rounded-pill">tag3</span>
+                            <a class="badge bg-primary rounded-pill" href="{%url 'tag' %}">tag1</a >
+                            <a class="badge bg-primary rounded-pill" href="{%url 'tag' %}">tag2</a>
+                            <a class="badge bg-primary rounded-pill" href="{%url 'tag' %}">tag3</a>
                         </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@
         <div class="row align-items-center my-2">
             <!-- Column for avatar -->
             <div class="col-2">
-                <img src="https://avatars.mds.yandex.net/i?id=fd573ab1672578a0f8d75ad3506626bc18e1a953-10768430-images-thumbs&n=13" class="rounded-3" style="width: 100px;" alt="Avatar" />
+                <img src="https://avatars.mds.yandex.net/i?id=fd573ab1672578a0f8d75ad3506626bc18e1a953-10768430-images-thumbs&n=13" class="rounded-circle" style="width: 100px;" alt="Avatar" />
             </div>
             <!-- Column for answer -->
             <div class="col-10">

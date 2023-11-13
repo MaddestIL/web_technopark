@@ -2,8 +2,8 @@
 
 <!-- block for unauthorized user -->
 {% block user_status %}
-<a class="btn btn-outline-primary fs-5" href="#">sign in</a>
-<a class="btn btn-primary fs-5 mx-3" href="#">sign up</a>
+<a class="btn btn-outline-primary fs-5" href="{%url 'signin' %}">Sign in</a>
+<a class="btn btn-primary fs-5 mx-3" href="{%url 'signup' %}">Sign up</a>
 {% endblock user_status %}
 
 {% block content %}
