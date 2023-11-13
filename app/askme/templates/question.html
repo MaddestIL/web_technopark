@@ -9,18 +9,59 @@
 {% block content %}
 <div class="col-9">
     <!-- Full question template -->
-    <div class="container p-3 border-bottom border-2">
+    <div class="container align-items-center border rounded-3 p-6 p-3 my-3">
         <div class="row align-items-start">
             <!-- Column for avatar -->
-            <div class="col-2 my-3">
-                <img src="https://avatars.mds.yandex.net/i?id=fd573ab1672578a0f8d75ad3506626bc18e1a953-10768430-images-thumbs&n=13" class="rounded-3" style="width: 100px;" alt="Avatar" />
+            <div class=" d-flex col-3 my-3 flex-column align-items-centre">
+                <img src="https://avatars.mds.yandex.net/i?id=fd573ab1672578a0f8d75ad3506626bc18e1a953-10768430-images-thumbs&n=13" class="rounded-circle" alt="Avatar" />
+                <div class="btn-group mt-3 px-4" role="group" aria-label="base button group">
+                    <button type="button" class="btn btn-outline-success"><img src="/static/svg/hand-thumbs-up.svg"></button>
+                     <button type="button" class="btn btn-outline-secondary disabled rating-button">0</button>
+                     <button type="button" class="btn btn-outline-danger"><img src="/static/svg/hand-thumbs-down.svg"></button>
+                </div>
             </div>
             <!-- Column for question and text -->
-            <div class="col-10">
+            <div class="col-9">
                 <div class="d-flex flex-column justify-content-start align-items-start my-1">
                     <p class="text-secondary fs-3" href="#">How to build a moon park?</p>
                     <p class="fs-5 text-secondary">
                         Lorem ipsum dolor sit, amet consectetur adipisicing elit.<br>
+                        Neque quo omnis modi consequuntur numquam, magnam dolore non<br>
+                        explicabo, doloremque, esse suscipit! Eum quisquam dicta aut,<br>
+                        deserunt saepe molestias facilis nulla?<br>
+                    </p>
+                </div>
+                 <div class="row align-items-center">
+            <!-- Column for tags -->
+            <div class="col-10">
+                <div class="d-flex justify-content-start align-items-center">
+                     <div class="flex mt-3">
+                            <span>Tags:</span>
+                            <span class="badge bg-primary rounded-pill">tag1</span >
+                            <span class="badge bg-primary rounded-pill">tag2</span>
+                            <span class="badge bg-primary rounded-pill">tag3</span>
+                        </div>
+                </div>
+            </div>
+        </div>
+            </div>
+        </div>
+        <!-- New line -->
+
+    </div>
+    <!-- End of question template -->
+    <!-- Answer template -->
+    <div class="container align-items-center bg-gray-900 rounded-lg p-6 border border-2 rounded-3 p-3 my-3">
+        <div class="row align-items-center my-2">
+            <!-- Column for avatar -->
+            <div class="col-2">
+                <img src="https://avatars.mds.yandex.net/i?id=fd573ab1672578a0f8d75ad3506626bc18e1a953-10768430-images-thumbs&n=13" class="rounded-3" style="width: 100px;" alt="Avatar" />
+            </div>
+            <!-- Column for answer -->
+            <div class="col-10">
+                <div class="d-flex flex-column justify-content-start align-items-start">
+                    <p class="text-secondary fs-5 text-break">
+                         Lorem ipsum dolor sit, amet consectetur adipisicing elit.<br>
                         Neque quo omnis modi consequuntur numquam, magnam dolore non<br>
                         explicabo, doloremque, esse suscipit! Eum quisquam dicta aut,<br>
                         deserunt saepe molestias facilis nulla?<br>
@@ -32,40 +73,11 @@
         <div class="row align-items-center">
             <!-- Column for likes -->
             <div class="col-2">
-                <input value="0" min="0" type="number" id="typeNumber" class="form-control counter"/>
-            </div>
-            <!-- Column for tags -->
-            <div class="col-10">
-                <div class="d-flex justify-content-start align-items-center">
-                    <span class="fs-5 text-secondary">Tags: </span>
-                    <a class="link-offset-2 fs-5" href="#">black-jack</a>
-                    <a class="link-offset-2 fs-5 mx-3" href="#">bender</a>
+                <div class="btn-group mt-3" role="group" aria-label="base button group">
+                    <button type="button" class="btn btn-outline-success"><img src="/static/svg/hand-thumbs-up.svg"></button>
+                     <button type="button" class="btn btn-outline-secondary disabled rating-button">0</button>
+                     <button type="button" class="btn btn-outline-danger"><img src="/static/svg/hand-thumbs-down.svg"></button>
                 </div>
-            </div>
-        </div>
-    </div>
-    <!-- End of question template -->
-    <!-- Answer template -->
-    <div class="container border border-2 rounded-3 p-3 my-3">
-        <div class="row align-items-center my-2">
-            <!-- Column for avatar -->
-            <div class="col-2">
-                <img src="https://avatars.mds.yandex.net/i?id=fd573ab1672578a0f8d75ad3506626bc18e1a953-10768430-images-thumbs&n=13" class="rounded-3" style="width: 100px;" alt="Avatar" />
-            </div>
-            <!-- Column for answer -->
-            <div class="col-10">
-                <div class="d-flex flex-column justify-content-start align-items-start">
-                    <p class="text-secondary fs-5 text-break">
-                        First of all i would like to thank you for the invitation to participate in such a Russia is the huge territory which in many respects needs to be render habilable.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <!-- New line -->
-        <div class="row align-items-center">
-            <!-- Column for likes -->
-            <div class="col-2">
-                <input value="0" min="0" type="number" id="typeNumber" class="form-control counter"/>
             </div>
             <!-- Column for check if the answer correct or not -->
             <div class="col-10">
