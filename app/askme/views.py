@@ -34,3 +34,15 @@ def tag(request):
 
 def hot(request):
     return render(request, 'index.html')
+
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger, Page
+from django.shortcuts import render
+
+
+def paginated_data(obj_list, request, per_page=10):
+
+    paginator = Paginator(obj_list, per_page)
+    page = request.GET.get('page', 1)
+
+    return paginator.get_page(page)
