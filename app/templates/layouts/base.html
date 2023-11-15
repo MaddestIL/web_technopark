@@ -47,26 +47,17 @@
                     <!-- Block of popular tags -->
                     <div class="my-5">
                         <h2 class="text-secondary text-black">Popular Tags</h2>
-                        <p class="text-break fs-5">
-                            <a class="btn btn-primary m-1 " href="#">perl</a>
-                            <a class="btn btn-warning m-1" href="#">python</a>
-                            <a class="btn btn-info m-1" href="#">TechnoPark</a>
-                            <a class="btn btn-danger m-1" href="#">MySQL</a>
-                            <a class="btn btn-success m-1" href="#">Django</a>
-                            <a class="btn btn-primary m-1"  href="#">Mail.Ru</a>
-                            <a class="btn btn-primary m-1" href="#">VK</a>
-                            <a class="btn btn-warning m-1" href="#">Firefox</a>
-                        </p>
+                        {% for tag in ptags %}
+                             <a href="{% url 'tag_questions' tag=tag %}" class="btn btn-primary m-1">{{ tag }}</a>
+                         {% endfor %}
                     </div>
                     <!-- End of block of popular tags -->
                     <!-- Block of best members -->
                     <div class="my-4">
                         <h2 class="text-secondary text-black">Best Members</h2>
-                        <p class=" my-3 fs-5"><a href="#">V. Pupkin</a></p>
-                        <p class="my-3 fs-5"><a href="#">V. Circle</a></p>
-                        <p class="my-3 fs-5"><a href="#">Dr. Dre</a></p>
-                        <p class="my-3 fs-5"><a href="#">Creep</a></p>
-                        <p class="my-3 fs-5"><a href="#">Quest</a></p>
+                       {% for mem in bmembers %}
+                            <a href="#" class="bmem">{{ mem }}</a>
+                        {% endfor %}
 
                     </div>
                     <!-- End block of best members -->

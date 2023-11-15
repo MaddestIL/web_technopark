@@ -1,118 +1,362 @@
 from django.db import models
+from django.db.models import Count, Sum
 from django.contrib.auth.models import User
-from django.db.models import Sum, Count
-from django.db.models.functions import Coalesce
-
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.fields import GenericRelation
-from django.contrib.contenttypes.models import ContentType
-
-
-class VoteQuestion(models.Model):
-    rate = models.IntegerField(default=0)
-
-    question_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name='question_votes')
-    question_object_id = models.PositiveIntegerField()
-    question_content_object = GenericForeignKey('question_content_type', 'question_object_id')
-    created_at = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, default="")
-
-    def __str__(self):
-        return f"rate:{self.rate};\tquestion_content_type:{self.question_content_type};\tauthor:{self.author_id}"
-
-    class Meta:
-        unique_together = ('author', 'question_content_type', 'question_object_id',)
-
-
-class VoteAnswer(models.Model):
-    rate = models.IntegerField(default=0)
-
-    answer_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name='answer_votes')
-    answer_object_id = models.PositiveIntegerField()
-    answer_content_object = GenericForeignKey('answer_content_type', 'answer_object_id')
-    created_at = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, default="")
-
-    def __str__(self):
-        return f"rate:{self.rate};\tanswer_content_type:{self.answer_content_type};\tauthor:{self.author_id}"
-
-    class Meta:
-        unique_together = ('author', 'answer_content_type', "answer_object_id",)
-
-
-class TagManager(models.Manager):
-    def sort_by_related_question_quantity(self):
-        return self.annotate(num_questions=Count('question')).order_by('-num_questions')
-
-
-class Tag(models.Model):
-    title = models.CharField(max_length=100, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    objects = TagManager()
-
-    def __str__(self):
-        return f"id: {self.id};\t title: {self.title}"
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class QuestionManager(models.Manager):
-    def sorted_by_rating(self):
-        return self.annotate(total_question_votes=Sum('question_votes__rate')).order_by('-total_question_votes')
 
-    def sorted_by_created_at(self):
-        return self.order_by('-created_at')
+    def get_obj(self, query):
+        return {
+                'id': query.pk,
+                'tags': query.tags.all(),
+                'answer_number': query.answer.count(),
+                'title': query.title,
+                'text': query.description,
+                'like': query.like.all().aggregate(Sum('type', default=0))['type__sum'],
+                'image': query.author.avatar
+            }
 
-    def filter_by_tag(self, tag_title):
-        return self.filter(tags__title=tag_title)
+    def get_likes(self, q_id):
+        query = self.filter(pk=q_id).last()
+        return query.like.all().aggregate(Sum('type', default=0))['type__sum']
+
+    def get_all(self, ids):
+        data = []
+        for id in ids:
+            data.append(self.get_obj(self.filter(pk=id).last()))
+        return data
+
+    def get_all_ids(self):
+        return self.values_list('id', flat=True)
+
+    def get_new_ids(self, count=10):
+        return self.get_all_ids()[:count]
+
+    def get_best_ids(self, count=10):
+        return self.annotate(order=Sum('like__type', default=0)).order_by('-order').values_list('id', flat=True)[:count]
+
+    def get_hot_ids(self, count=10):
+        return self.annotate(order=Count('answer')).order_by('-order').values_list('id', flat=True)[:count]
+
+    def get_by_tag_ids(self, tag):
+        return self.filter(tags__title=tag).values_list('id', flat=True)
 
 
 class Question(models.Model):
-    title = models.CharField(max_length=255)
-    body = models.TextField()
-    votes = GenericRelation(VoteQuestion)
-    created_at = models.DateTimeField(auto_now_add=True)
-    tags = models.ManyToManyField(Tag)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, default="")
+
+    class Meta:
+        ordering = ['-creating_time']
+        verbose_name = 'Вопрос',
+        verbose_name_plural = 'Вопросы'
+
+    title = models.CharField(
+        max_length=255,
+        verbose_name='Вопрос'
+    )
+    description = models.CharField(
+        max_length=1000,
+        verbose_name='Описание'
+    )
+    creating_time = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Время создания'
+    )
+    editing_time = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Время редактирования'
+    )
+    is_editing = models.BooleanField(
+        default=False,
+        verbose_name='Отредактировано'
+    )
+    author = models.ForeignKey(
+        'Profile',
+        on_delete=models.CASCADE,
+        related_name='question',
+        verbose_name='Автор'
+    )
+
+    tags = models.ManyToManyField(
+        'Tag',
+        blank=True,
+        related_name='questions',
+        verbose_name='Тег'
+    )
 
     objects = QuestionManager()
 
     def __str__(self):
-        return f"title: {self.title};\t votes: {self.votes};"
-
-    def get_rating(self):
-        rating = self.votes.aggregate(Sum('rate'))['rate__sum']
-        return rating if rating is not None else 0
-
-    def answers_count(self):
-        return Count(Answer.objects.filter(question_id=self.id))
+        return f'Question #{self.pk} by {self.author}'
 
 
 class AnswerManager(models.Manager):
-    def sorted_by_rating(self, question_id):
-        return self.filter(question_id=question_id) \
-            .annotate(total_answer_votes=Coalesce(Sum('answer_votes__rate'), 0)).order_by('-total_answer_votes')
+
+    def get_obj(self, query):
+        return {
+                'id': query.pk,
+                'text': query.description,
+                'like': query.like.all().aggregate(Sum('type', default=0))['type__sum'],
+                'image': query.author.avatar,
+                'correct': query.is_correct
+            }
+
+    def get_likes(self, q_id):
+        query = self.filter(pk=q_id).last()
+        return query.like.all().aggregate(Sum('type', default=0))['type__sum']
+
+    def get_all(self, ids):
+        data = []
+        for id in ids:
+            data.append(self.get_obj(self.filter(pk=id).last()))
+        return data
+
+    def get_all_ids(self, q_id):
+        return self.filter(question__pk=q_id).annotate(o=Sum('like__type', default=0)).order_by('-o').values_list('id', flat=True)
 
 
 class Answer(models.Model):
-    body = models.TextField()
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    votes = GenericRelation(VoteAnswer)
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_correct = models.BooleanField(default=False)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, default="")
-
     objects = AnswerManager()
 
-    def __str__(self):
-        return f"question_id: {self.question_id};\t votes: {self.votes}"
+    class Meta:
+        verbose_name = 'Ответ',
+        verbose_name_plural = 'Ответы'
 
-    def get_rating(self):
-        rating = self.votes.aggregate(Sum('rate'))['rate__sum']
-        return rating if rating is not None else 0
+    author = models.ForeignKey(
+        'Profile',
+        on_delete=models.CASCADE,
+        related_name='answer',
+        verbose_name='Ответчик'
+    )
+    question = models.ForeignKey(
+        'Question',
+        on_delete=models.CASCADE,
+        related_name='answer',
+        verbose_name='Вопрос'
+    )
+    description = models.CharField(
+        max_length=1000,
+        verbose_name='Ответ'
+    )
+    creating_time = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Время ответа'
+    )
+    editing_time = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Время редактирования'
+    )
+    is_editing = models.BooleanField(
+        default=False,
+        verbose_name='Отредактировано'
+    )
+    is_correct = models.BooleanField(
+        default=False,
+        verbose_name='Корректный ответ'
+    )
+
+    def __str__(self):
+        return f'Answer #{self.pk} by {self.author}'
+
+
+class TagManager(models.Manager):
+    def get_popular(self, count=10):
+        return self.annotate(cnt=Count('questions')).order_by('-cnt')[:count]
+
+
+class Tag(models.Model):
+
+    objects = TagManager()
+
+    class Meta:
+        verbose_name = 'Тег',
+        verbose_name_plural = 'Теги'
+
+    title = models.CharField(
+        max_length=20,
+        verbose_name='Тег'
+    )
+
+    def __str__(self):
+        return f'{self.title}'
+
+
+class ProfileManager(models.Manager):
+
+    def get_user_by_username(self, username):
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            user = None
+
+        return user
+
+    def get_user_by_email(self, email):
+        try:
+            user = User.objects.get(email=email)
+        except ObjectDoesNotExist:
+            user = None
+
+        return user
+
+    def get_best(self, count=5):
+        ids = self.annotate(cnt=Count('answer')).order_by('-cnt').values_list('id')[:count]
+        names = []
+        for i in ids:
+            names.append(self.get(pk=i[0]).user.username)
+        return names
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    # author
+
+    objects = ProfileManager()
+
+    class Meta:
+        verbose_name = 'Профиль',
+        verbose_name_plural = 'Профили'
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='Пользователь'
+    )
+
+    avatar = models.ImageField(
+        upload_to='img',
+        default='img/base.jpg',
+        verbose_name='Аватарка',
+        blank=True,
+        null=True
+    )
+    nickname = models.CharField(
+        max_length=30,
+        blank=True,
+        null=True,
+        verbose_name='Ник'
+    )
+    birthday = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Дата рождения'
+    )
+
+    def __str__(self):
+        return f'{self.user.username}'
+
+
+class AnswerLikeManager(models.Manager):
+
+    def create_or_change_like(self, answer, profile, vote):
+        like_enum = {"like": 1, "dislike": -1}
+
+        like = AnswerLike.objects.filter(answer=answer).filter(author=profile).last()
+        if not like:
+            AnswerLike.objects.create(
+                answer=answer,
+                author=profile,
+                type=like_enum[vote]
+            )
+        elif like.type != like_enum[vote]:
+            like.type = like_enum[vote]
+            like.save()
+        else:
+            like.type = 0
+            like.save()
+
+
+class AnswerLike(models.Model):
+
+    objects = AnswerLikeManager()
+
+    class Meta:
+        verbose_name = 'Лайк ответа',
+        verbose_name_plural = 'Лайки ответов'
+        unique_together = ['answer', 'author']
+
+    LIKE = 1
+    DISLIKE = -1
+    CHOICE = (
+        (LIKE, 'Like'),
+        (DISLIKE, 'Dislike')
+    )
+
+    type = models.IntegerField(
+        choices=CHOICE,
+        default=1
+    )
+    answer = models.ForeignKey(
+        'Answer',
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name='like',
+        verbose_name='Ответ'
+    )
+    author = models.ForeignKey(
+        'Profile',
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Лайкнул'
+    )
+
+    def __str__(self):
+        return f'Liked by {self.author}'
+
+
+class QuestionLikeManager(models.Manager):
+
+    def create_or_change_like(self, question, profile, vote):
+        like_enum = {"like": 1, "dislike": -1}
+
+        like = QuestionLike.objects.filter(question=question).filter(author=profile).last()
+        if not like:
+            QuestionLike.objects.create(
+                question=question,
+                author=profile,
+                type=like_enum[vote]
+            )
+        elif like.type != like_enum[vote]:
+            like.type = like_enum[vote]
+            like.save()
+        else:
+            like.type = 0
+            like.save()
+
+
+class QuestionLike(models.Model):
+
+    objects = QuestionLikeManager()
+
+    class Meta:
+        verbose_name = 'Лайк вопроса',
+        verbose_name_plural = 'Лайки вопросов'
+        unique_together = ['question', 'author']
+
+    LIKE = 1
+    DISLIKE = -1
+    CHOICE = (
+        (LIKE, 'Like'),
+        (DISLIKE, 'Dislike')
+    )
+
+    type = models.IntegerField(
+        choices=CHOICE,
+        default=1
+    )
+    question = models.ForeignKey(
+        'Question',
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name='like',
+        verbose_name='Вопрос'
+    )
+    author = models.ForeignKey(
+        'Profile',
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Лайкнул'
+    )
+
+    def __str__(self):
+        return f'Liked by {self.author}'

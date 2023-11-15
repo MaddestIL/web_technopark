@@ -1,23 +1,31 @@
 {% extends "layouts/base.html" %}
 
+{% load static %}
+
 {% block user_status %}
 <img src="https://avatars.mds.yandex.net/i?id=fd573ab1672578a0f8d75ad3506626bc18e1a953-10768430-images-thumbs&n=13" class="rounded-circle" style="width: 80px;" alt="Avatar" />
-<div class="d-flex flex-column mx-4">
-    <p class="fs-3 my-1 text-secondary">Dr. Pepper</p>
+<div class="d-flex flex-column mx-2">
+    <p class="fs-3 my-1 text-white">Dr. Pepper</p>
     <div class="mt-1">
-        <a class="btn btn-primary fs-6" href="{% url 'settings' %}">Settings</a>
-        <button class="btn btn-outline-danger fs-6 mx-3">Log out</button>
+        <a class="btn btn-primary fs-6" href="{%url 'settings' %}">Settings</a>
+        <button class="btn btn-outline-danger fs-6 mx-3" >Sign out</button>
+
     </div>
-</div>
+
 {% endblock user_status %}
+    {% block q_type %}
 {% block content %}
 <div class="col-9 my-4">
     <!-- Title of the page and link to the hot questions-->
     <div class="d-flex justify-content-start align-items-center">
-        <h2 class="text-secondary">New Questions</h2>
+        <a class="h2" href="{%url 'ask' %}">New Questions</a>
         <a class="link-offset-2 fs-5 mx-3" href="{%url 'hot' %}">Hot Questions</a>
     </div>
     <!-- Question template -->
+
+    {% for question in data %}
+        {% include 'question_item.html' %}
+    {% endfor %}
         <div class=" align-items-center bg-gray-900 rounded-lg p-6 shadow-lg border border-2 rounded-3 p-3 my-3">
             <div class="row flex items-start">
             <!-- Column for avatar -->
@@ -110,23 +118,7 @@
     </div>
     <!-- End of question template -->
     <!-- Pagination -->
-  <nav aria-label="Page navigation">
-  <ul class="pagination">
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Previous">
-        <span aria-hidden="true">«</span>
-      </a>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Next">
-        <span aria-hidden="true">»</span>
-      </a>
-    </li>
-  </ul>
-</nav>
+{% include 'paginator.html' %}
     <!-- End of pagination -->
 </div>
 {% endblock content %}
