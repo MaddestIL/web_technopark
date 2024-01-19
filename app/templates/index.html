@@ -11,114 +11,22 @@
         <button class="btn btn-outline-danger fs-6 mx-3" >Sign out</button>
 
     </div>
-
-{% endblock user_status %}
-    {% block q_type %}
+    {% endblock user_status %}
 {% block content %}
 <div class="col-9 my-4">
     <!-- Title of the page and link to the hot questions-->
-    <div class="d-flex justify-content-start align-items-center">
+    <div class=" justify-content-start align-items-center">
         <a class="h2" href="{%url 'ask' %}">New Questions</a>
         <a class="link-offset-2 fs-5 mx-3" href="{%url 'hot' %}">Hot Questions</a>
     </div>
     <!-- Question template -->
 
-    {% for question in data %}
-        {% include 'question_item.html' %}
+    {% for question in page_obj %}
+        {% include 'components/question_item.html' %}
     {% endfor %}
-        <div class=" align-items-center bg-gray-900 rounded-lg p-6 shadow-lg border border-2 rounded-3 p-3 my-3">
-            <div class="row flex items-start">
-            <!-- Column for avatar -->
-            <div class="d-flex col-2 flex-column ">
-                <img src="https://avatars.mds.yandex.net/i?id=fd573ab1672578a0f8d75ad3506626bc18e1a953-10768430-images-thumbs&n=13" alt="avatar" class="rounded-circle">
-                <div class="btn-group mt-3" role="group" aria-label="base button group">
-                    <button type="button" class="btn btn-outline-success"><img src="/static/svg/hand-thumbs-up.svg"></button>
-                     <button type="button" class="btn btn-outline-secondary disabled rating-button">0</button>
-                     <button type="button" class="btn btn-outline-danger"><img src="/static/svg/hand-thumbs-down.svg"></button>
-                </div>
-            </div>
-            <!-- Column for question -->
-            <div class="d-flex flex-row col-10">
-                <div class=" d-flex flex-column justify-content-start align-items-start">
-                    <a class="link-offset-2 fs-3" href="{%url 'question' %}">Lorem ipsum</a>
-                        <p class="fs-5 text-secondary">
-                            Text is texted <br>
-                            Can't find it...
-                        </p>
-
-                        <div class="flex mt-5">
-                            <span>Tags:</span>
-                            <a class="badge bg-primary rounded-pill" href="{%url 'tag' %}">tag1</a >
-                            <a class="badge bg-primary rounded-pill" href="{%url 'tag' %}">tag2</a>
-                            <a class="badge bg-primary rounded-pill" href="{%url 'tag' %}">tag3</a>
-                        </div>
-                </div>
-            </div>
-        </div>
-    </div>
-        <div class=" align-items-center bg-gray-900 rounded-lg p-6 shadow-lg border border-2 rounded-3 p-3 my-3">
-            <div class="row flex items-start">
-            <!-- Column for avatar -->
-            <div class="d-flex col-2 flex-column ">
-                <img src="https://avatars.mds.yandex.net/i?id=fd573ab1672578a0f8d75ad3506626bc18e1a953-10768430-images-thumbs&n=13" alt="avatar" class="rounded-circle">
-                <div class="btn-group mt-3" role="group" aria-label="base button group">
-                    <button type="button" class="btn btn-outline-success"><img src="/static/svg/hand-thumbs-up.svg"></button>
-                     <button type="button" class="btn btn-outline-secondary disabled rating-button">0</button>
-                     <button type="button" class="btn btn-outline-danger"><img src="/static/svg/hand-thumbs-down.svg"></button>
-                </div>
-            </div>
-            <!-- Column for question -->
-            <div class="d-flex flex-row col-10">
-                <div class=" d-flex flex-column justify-content-start align-items-start">
-                    <a class="link-offset-2 fs-3" href="#">Lorem ipsum</a>
-                        <p class="fs-5 text-secondary">
-                            Text is texted <br>
-                            Can't find it...
-                        </p>
-
-                        <div class="flex mt-5">
-                            <span>Tags:</span>
-                            <span class="badge bg-primary rounded-pill">tag1</span >
-                            <span class="badge bg-primary rounded-pill">tag2</span>
-                            <span class="badge bg-primary rounded-pill">tag3</span>
-                        </div>
-                </div>
-            </div>
-        </div>
-    </div>
-        <div class=" align-items-center bg-gray-900 rounded-lg p-6 shadow-lg border border-2 rounded-3 p-3 my-3">
-            <div class="row flex items-start">
-            <!-- Column for avatar -->
-            <div class="d-flex col-2 flex-column ">
-                <img src="https://avatars.mds.yandex.net/i?id=fd573ab1672578a0f8d75ad3506626bc18e1a953-10768430-images-thumbs&n=13" alt="avatar" class="rounded-circle">
-                <div class="btn-group mt-3" role="group" aria-label="base button group">
-                    <button type="button" class="btn btn-outline-success"><img src="/static/svg/hand-thumbs-up.svg"></button>
-                     <button type="button" class="btn btn-outline-secondary disabled rating-button">0</button>
-                     <button type="button" class="btn btn-outline-danger"><img src="/static/svg/hand-thumbs-down.svg"></button>
-                </div>
-            </div>
-            <!-- Column for question -->
-            <div class="d-flex flex-row col-10">
-                <div class=" d-flex flex-column justify-content-start align-items-start">
-                    <a class="link-offset-2 fs-3" href="#">Lorem ipsum</a>
-                        <p class="fs-5 text-secondary">
-                            Text is texted <br>
-                            Can't find it...
-                        </p>
-
-                        <div class="flex mt-5">
-                            <span>Tags:</span>
-                            <span class="badge bg-primary rounded-pill">tag1</span >
-                            <span class="badge bg-primary rounded-pill">tag2</span>
-                            <span class="badge bg-primary rounded-pill">tag3</span>
-                        </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- End of question template -->
     <!-- Pagination -->
-{% include 'paginator.html' %}
+    {% include 'components/pagination.html' %}
     <!-- End of pagination -->
 </div>
 {% endblock content %}

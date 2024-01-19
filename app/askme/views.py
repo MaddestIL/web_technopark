@@ -8,27 +8,17 @@ from django.contrib.auth.models import User
 from .models import Question, QuestionLike, AnswerLike, Answer, Tag, Profile
 
 
-def paginate(request, data, count=10):
-    paginator = Paginator(data, count)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    last_page = len(paginator.page_range)
-    return page_obj, last_page
+
 
 
 @require_http_methods(['GET'])
 def index(request):
-    questions = Question.objects.get_all_ids()
-    page_obj, last_page = paginate(request, questions, 10)
-    data = Question.objects.get_all(page_obj)
+    page_obj = paginate(Question.objects.get_all(), request)
     context = {
-        'last_page': last_page,
         'page_obj': page_obj,
-        'data': data,
-        'ptags': Tag.objects.get_popular(),
-        'bmembers': Profile.objects.get_best()
-    }
-    return render(request, 'all_questions.html', context=context)
+        'global_tags': Tag.objects.get_popular()[:10],
+               }
+    return render(request, 'index.html', context=context)
 
 
 @require_http_methods(['GET'])
@@ -115,7 +105,7 @@ def signin(request):
 
 @login_required(login_url="login", redirect_field_name="continue")
 @require_http_methods(['GET', 'POST'])
-def settings(request):
+def settings(request, user_id):
     user = get_object_or_404(User, id=request.user.id)
     user_id = user.id
     context = {
@@ -135,27 +125,20 @@ def ask(request):
     return render(request, 'ask.html', context=context)
 
 
-def custom_paginate(obj, data, count=10):
-    page = obj // count + 1
-    paginator = Paginator(data, count)
-    page_obj = paginator.get_page(page)
-    last_page = len(paginator.page_range)
-    return page_obj, last_page
+
 
 
 @require_http_methods(['GET', 'POST'])
 def question(request, question_id: int):
-    question_item = get_object_or_404(Question, pk=question_id)
-    is_author = False
-    if question_item.author.user == request.user:
-        is_author = True
-    context = {
-        'question': Question.objects.get_obj(question_item),
-        'ptags': Tag.objects.get_popular(),
-        'bmembers': Profile.objects.get_best(),
-        'author': is_author
-    }
+    page_obj = paginate(Answer.objects.filter(question_id=question_id), request, 3)
+    context = {'question': Question.objects.get(pk=question_id),
+               'global_tags': Tag.objects.sort_by_related_question_quantity()[:10],
+               'page_obj': page_obj,
+               }
     return render(request, 'question.html', context=context)
 
-
+def paginate(objects_list, request, per_page=10):
+    paginator = Paginator(objects_list, per_page)
+    page_number = request.GET.get('page', 1)
+    return paginator.get_page(page_number)
 

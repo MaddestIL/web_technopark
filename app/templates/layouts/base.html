@@ -21,7 +21,7 @@
                 <div class="col-7">
                     <div class="input-group">
                         <input class="form-control me-1 fs-5 mr-1" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-primary fs-3" type="submit">Ask</button>
+                        <a class="btn btn-primary fs-3" type="submit" href="{% url 'ask' %}">Ask</a>
                     </div>
                 </div>
                 <!-- Three cols for avatar and buttons-->
@@ -37,7 +37,7 @@
         <!-- End of header container -->
         <!-- Main content container -->
         <div class="container">
-            <div class="row">
+            <div class="row ">
                 <!-- block for main content of each page -->
                 {% block content %}
                 {% endblock %}

@@ -20,7 +20,7 @@
 
                     <div class="flex mt-5">
                         <span>Tags:</span>
-                        {% for tag in question.tags %}
+                        {% for tag in question.tags.all %}
                             <a href="{% url 'tag_questions' tag=tag %}" class="badge bg-primary rounded-pill">{{ tag }}</a>
                         {% endfor %}
                     </div>

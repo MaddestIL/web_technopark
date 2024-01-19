@@ -8,24 +8,21 @@ class QuestionManager(models.Manager):
 
     def get_obj(self, query):
         return {
-                'id': query.pk,
-                'tags': query.tags.all(),
-                'answer_number': query.answer.count(),
-                'title': query.title,
-                'text': query.description,
-                'like': query.like.all().aggregate(Sum('type', default=0))['type__sum'],
-                'image': query.author.avatar
-            }
+            'id': query.pk,
+            'tags': query.tags.all(),
+            'answer_number': query.answer.count(),
+            'title': query.title,
+            'text': query.description,
+            'like': query.like.all().aggregate(Sum('type', default=0))['type__sum'],
+            'image': query.author.avatar
+        }
 
     def get_likes(self, q_id):
         query = self.filter(pk=q_id).last()
         return query.like.all().aggregate(Sum('type', default=0))['type__sum']
 
-    def get_all(self, ids):
-        data = []
-        for id in ids:
-            data.append(self.get_obj(self.filter(pk=id).last()))
-        return data
+    def get_all(self):
+        return self.order_by('creating_time')
 
     def get_all_ids(self):
         return self.values_list('id', flat=True)
@@ -44,7 +41,6 @@ class QuestionManager(models.Manager):
 
 
 class Question(models.Model):
-
     class Meta:
         ordering = ['-creating_time']
         verbose_name = 'Вопрос',
@@ -94,12 +90,12 @@ class AnswerManager(models.Manager):
 
     def get_obj(self, query):
         return {
-                'id': query.pk,
-                'text': query.description,
-                'like': query.like.all().aggregate(Sum('type', default=0))['type__sum'],
-                'image': query.author.avatar,
-                'correct': query.is_correct
-            }
+            'id': query.pk,
+            'text': query.description,
+            'like': query.like.all().aggregate(Sum('type', default=0))['type__sum'],
+            'image': query.author.avatar,
+            'correct': query.is_correct
+        }
 
     def get_likes(self, q_id):
         query = self.filter(pk=q_id).last()
@@ -112,7 +108,8 @@ class AnswerManager(models.Manager):
         return data
 
     def get_all_ids(self, q_id):
-        return self.filter(question__pk=q_id).annotate(o=Sum('like__type', default=0)).order_by('-o').values_list('id', flat=True)
+        return self.filter(question__pk=q_id).annotate(o=Sum('like__type', default=0)).order_by('-o').values_list('id',
+                                                                                                                  flat=True)
 
 
 class Answer(models.Model):
@@ -165,7 +162,6 @@ class TagManager(models.Manager):
 
 
 class Tag(models.Model):
-
     objects = TagManager()
 
     class Meta:
@@ -208,7 +204,6 @@ class ProfileManager(models.Manager):
 
 
 class Profile(models.Model):
-
     objects = ProfileManager()
 
     class Meta:
@@ -265,7 +260,6 @@ class AnswerLikeManager(models.Manager):
 
 
 class AnswerLike(models.Model):
-
     objects = AnswerLikeManager()
 
     class Meta:
@@ -324,7 +318,6 @@ class QuestionLikeManager(models.Manager):
 
 
 class QuestionLike(models.Model):
-
     objects = QuestionLikeManager()
 
     class Meta:
